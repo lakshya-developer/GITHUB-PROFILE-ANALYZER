@@ -7,7 +7,7 @@ const {
   analyzeProfile,
   getAllProfiles,
   getProfileByUsername,
-} = require("../controllers/githubController");
+} = require("../controllers/gitHubController");
 
 // Analyze a GitHub profile and store/update in DB
 router.get("/analyze/:username", analyzeProfile);
