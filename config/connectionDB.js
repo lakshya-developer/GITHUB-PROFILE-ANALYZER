@@ -1,6 +1,13 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config()
 
+console.log("--- DATABASE DEBUG INFO ---");
+console.log("HOST:", process.env.MYSQLHOST);
+console.log("PORT:", process.env.MYSQLPORT);
+console.log("USER:", process.env.MYSQLUSER);
+console.log("---------------------------");
+
+
 const pool = mysql.createPool({
   host: process.env.MYQLHOST || process.env.MYSQLHOST,
   port: Number(process.env.MYSQLPORT),
@@ -11,6 +18,8 @@ const pool = mysql.createPool({
   connectionLimit: 10,
   queueLimit: 0 
 })
+
+
 
 
 pool.getConnection((err, connection) => {
