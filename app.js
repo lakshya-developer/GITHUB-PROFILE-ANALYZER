@@ -13,7 +13,20 @@ app.get("/", (req, res) => {
 
 app.use("/api/github", githubRoutes);
 
+async function startServer() {
+  console.log("🔄 Initializing system sequences...");
 
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
-});
+  // 1. Verify Database is ready
+  const isDbConnected = await testConnection();
+  
+  if (!isDbConnected) {
+    console.error("🛑 Server startup aborted due to missing or failed DB connection setup.");
+    // In production, exiting allows the container orchestrator (Railway) to retry cleanly
+    process.exit(1); 
+  }
+
+  // 2. Only start listening once DB is confirmed online
+  app.listen(PORT, () => {
+    console.log(`🚀 Server safely running on port ${PORT}`);
+  });
+}

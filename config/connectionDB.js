@@ -1,13 +1,6 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config()
 
-console.log("--- DATABASE DEBUG INFO ---");
-console.log("HOST:", process.env.MYSQLHOST);
-console.log("PORT:", process.env.MYSQLPORT);
-console.log("USER:", process.env.MYSQLUSER);
-console.log("---------------------------");
-
-
 const pool = mysql.createPool({
   host: process.env.MYQLHOST || process.env.MYSQLHOST,
   port: Number(process.env.MYSQLPORT),
@@ -19,18 +12,19 @@ const pool = mysql.createPool({
   queueLimit: 0 
 })
 
-
-
-
-pool.getConnection((err, connection) => {
-  if (err) {
-    console.error('Database connection failed:', err.message);
-    return;
+// Asynchronous verification wrapper
+async function testConnection() {
+  try {
+    // Get a connection from the pool, run a simple query, and release it
+    const connection = await pool.getConnection();
+    await connection.query('SELECT 1');
+    connection.release();
+    return true;
+  } catch (error) {
+    console.error("❌ Database connection failed during startup sequence:");
+    console.error(error.message);
+    return false;
   }
-  console.log('Connected to MySQL via Pool');
-  
-  // Important: Release the connection back to the pool immediately
-  connection.release();
-});
+}
 
 module.exports = pool;
