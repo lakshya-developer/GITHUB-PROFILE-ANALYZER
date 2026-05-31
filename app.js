@@ -32,3 +32,4 @@ async function startServer() {
     console.log(`🚀 Server safely running on port ${PORT}`);
   });
 }
+startServer();
