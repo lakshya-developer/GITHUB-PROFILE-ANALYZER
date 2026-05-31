@@ -27,8 +27,10 @@ async function startServer() {
 
   console.log('Connection successful.')
 
+  const PORT = process.env.SERVER_PORT;
+
   // 2. Only start listening once DB is confirmed online
-  app.listen(3000, () => {
+  app.listen(PORT, () => {
     console.log(`🚀 Server safely running on port ${PORT}`);
   });
 }
