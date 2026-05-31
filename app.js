@@ -1,5 +1,5 @@
 const express = require('express');
-const pool = require('./config/connectionDB');
+const {pool, testConnection} = require('./config/connectionDB');
 const githubRoutes = require('./routes/gitHubRoutes');
 
 

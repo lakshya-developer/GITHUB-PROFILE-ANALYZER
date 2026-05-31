@@ -34,4 +34,4 @@ async function testConnection() {
   }
 }
 
-module.exports = pool;
+module.exports = {pool, testConnection};
