@@ -1,6 +1,13 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config()
 
+console.log("=====================================");
+console.log("🚀 STARTING DB LIFECYCLE CHECK");
+console.log("DB HOST:", process.env.MYSQLHOST);
+console.log("DB PORT:", process.env.MYSQLPORT);
+console.log("DB USER:", process.env.MYSQLUSER);
+console.log("=====================================");
+
 const pool = mysql.createPool({
   host: process.env.MYQLHOST || process.env.MYSQLHOST,
   port: Number(process.env.MYSQLPORT),
