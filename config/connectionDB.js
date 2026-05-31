@@ -1,37 +1,34 @@
-const mysql = require('mysql2/promise');
-require('dotenv').config()
+const mysql = require('mysql2');
 
 console.log("=====================================");
-console.log("🚀 STARTING DB LIFECYCLE CHECK");
-console.log("DB HOST:", process.env.MYSQLHOST);
-console.log("DB PORT:", process.env.MYSQLPORT);
-console.log("DB USER:", process.env.MYSQLUSER);
+console.log("⚙️ INITIALIZING DATABASE CONFIG");
+console.log("TARGET HOST:", process.env.MYSQLHOST);
+console.log("TARGET PORT:", process.env.MYSQLPORT);
 console.log("=====================================");
 
+// Create a standard pool setup
 const pool = mysql.createPool({
-  host: process.env.MYQLHOST || process.env.MYSQLHOST,
+  host: process.env.MYSQLHOST,
   port: Number(process.env.MYSQLPORT),
   user: process.env.MYSQLUSER,
   password: process.env.MYSQLPASSWORD,
   database: process.env.MYSQLDATABASE,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0 
-})
+  queueLimit: 0,
+  connectTimeout: 5000 // Stop waiting after 5 seconds
+});
 
-// Asynchronous verification wrapper
-async function testConnection() {
-  try {
-    // Get a connection from the pool, run a simple query, and release it
-    const connection = await pool.getConnection();
-    await connection.query('SELECT 1');
-    connection.release();
-    return true;
-  } catch (error) {
-    console.error("❌ Database connection failed during startup sequence:");
-    console.error(error.message);
-    return false;
+// Convert the pool to use promises cleanly
+const promisePool = pool.promise();
+
+// Simple callback-based check that CANNOT freeze the async event loop
+pool.query('SELECT 1', (err, results) => {
+  if (err) {
+    console.error("❌ DATABASE CONNECTIVITY ERROR:", err.message);
+  } else {
+    console.log("✅ DATABASE CONNECTED SUCCESSFULLY VIA PUBLIC PROXY!");
   }
-}
+});
 
-module.exports = {pool, testConnection};
+module.exports = promisePool;
